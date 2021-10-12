@@ -4,6 +4,9 @@
     {% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% for message in get_flashed_messages() %}
+        <div class="alert">{{ message }}</div>
+    {% endfor %}
     <title>{{name }}'s Watchlist</title>
     <link rel="icon" href="{{url_for('static',filename='firstfavicon.icon.ico')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
