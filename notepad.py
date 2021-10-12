@@ -52,3 +52,31 @@ movies = [
 @app.route('/in')
 def index():
     return render_template('index.html',name=name,movies=movies)
+
+
+#数据库--------------------------------
+#sqlite3: cmd输入sqlite3 xx.db
+#随便sql就可以了
+#
+from flask_sqlalchemy import SQLAlchemy
+import os
+#设置数据库路径
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'data.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False#关闭对模型修改的监控
+
+db=SQLAlchemy(app)#db初始化
+
+#表要继承Model
+class User(db.Model): # 表名将会是 user（自动生成，小写处理）
+    id = db.Column(db.Integer, primary_key=True) # 主键
+    name = db.Column(db.String(20)) # 名字
+
+class Movie(db.Model): # 表名将会是 movie
+    id = db.Column(db.Integer, primary_key=True) # 主键
+    title = db.Column(db.String(60)) # 电影标题
+    year = db.Column(db.String(4)) # 电影年份
+@app.route('/')
+def index():
+    user = User.query.first() #User.query.filter(user.id=="xxx").first()类似这样
+    movies = Movie.query.all() # 读取所有电影记录
+    return render_template('index.html', name=user.name, movies=movies)
